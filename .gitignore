@@ -5,3 +5,4 @@
 *.tfstate
 *.tfstate.backup
 *.tfvars
+*.txt
