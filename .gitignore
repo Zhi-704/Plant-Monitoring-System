@@ -7,3 +7,5 @@
 *.tfvars
 *.txt
 !requirements.txt
+*.md
+!README.md
