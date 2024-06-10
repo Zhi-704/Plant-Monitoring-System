@@ -6,3 +6,4 @@
 *.tfstate.backup
 *.tfvars
 *.txt
+!requirements.txt
