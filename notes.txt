@@ -1,0 +1,10 @@
+git switch -c [branch name]
+git add .
+git commit -m "[commit message]"
+git push -u origin [branch name]
+(Approve first)
+git checkout main
+git pull
+git branch
+git branch -d [branch name] # local
+git push origin --delete change_readme
