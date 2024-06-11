@@ -1,33 +1,37 @@
 """Test Transform file"""
-
+import pytest
 import datetime
 from transform import get_country, transform_data
 
-plant_data = [
-    {
-        "botanist": {
-            "email": "carl.linnaeus@lnhm.co.uk",
-            "name": "Carl Linnaeus",
-            "phone": "(146)994-1635x35992"
-        },
-        "last_watered": "Mon, 10 Jun 2024 14:03:04 GMT",
-        "name": "Epipremnum Aureum",
-        "origin_location": [
+
+@pytest.fixture
+def plant_data() -> list[dict]:
+    """An example data from the Herokuapp API"""
+    return [
+        {
+            "botanist": {
+                "email": "carl.linnaeus@lnhm.co.uk",
+                "name": "Carl Linnaeus",
+                "phone": "(146)994-1635x35992"
+            },
+            "last_watered": "Mon, 10 Jun 2024 14:03:04 GMT",
+            "name": "Epipremnum Aureum",
+            "origin_location": [
                 "-19.32556",
                 "-41.25528",
                 "Resplendor",
                 "BR",
                 "America/Sao_Paulo"
-        ],
-        "plant_id": 0,
-        "recording_taken": "2024-06-10 16:01:56",
-        "scientific_name": [
-            "Epipremnum aureum"
-        ],
-        "soil_moisture": 93.0958352536302,
-        "temperature": 13.137477117877957,
-        "response": 200
-    }]
+            ],
+            "plant_id": 0,
+            "recording_taken": "2024-06-10 16:01:56",
+            "scientific_name": [
+                "Epipremnum aureum"
+            ],
+            "soil_moisture": 93.0958352536302,
+            "temperature": 13.137477117877957,
+            "response": 200
+        }]
 
 
 def test_get_country_valid() -> None:
@@ -36,13 +40,13 @@ def test_get_country_valid() -> None:
     assert get_country(country_code) == "Brazil"
 
 
-def test_tranform_data_name() -> None:
+def test_tranform_data_name(plant_data: list[dict]) -> None:
     """Test valid name"""
     data = transform_data(plant_data)[0]
     assert data["first_name"], data["last_name"] == "Carl Linnaeus"
 
 
-def test_tranform_data_valid() -> None:
+def test_tranform_data_valid(plant_data: list[dict]) -> None:
     """Transform the useful data"""
     assert transform_data(plant_data) == [{
         'first_name': 'Carl',
@@ -62,7 +66,7 @@ def test_tranform_data_valid() -> None:
         'country_name': 'Brazil'}]
 
 
-def test_tranform_data_invalid() -> None:
+def test_tranform_data_invalid(plant_data: list[dict]) -> None:
     """Miss out any invalid data"""
     plant_data = [{
         "error": "plant not found",

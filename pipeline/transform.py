@@ -1,7 +1,7 @@
 """Transform file"""
 
+from extract import get_all_plant_data
 from datetime import datetime
-from json import load
 import pycountry
 
 
@@ -9,21 +9,10 @@ DATE_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 DATA_FILE = "plant.json"
 
 
-def get_data() -> list[dict]:
-    """Returns data from the herokuapp"""
-    with open(DATA_FILE, encoding="utf-8") as f:
-        return load(f)
-
-
 def get_country(country_code: str) -> str:
     """From the country code, get the country name"""
     country = pycountry.countries.get(alpha_2=country_code)
     return country.name
-
-
-def get_name(name: str) -> list[str]:
-    """Splits the full name into first and last name"""
-    return name.split()
 
 
 def transform_data(plant_data: list[dict]) -> list[dict]:
@@ -48,7 +37,7 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
             "temperature": float(plant["temperature"]),
             "timestamp": datetime.fromisoformat(plant["recording_taken"]),
             "plant_id": int(plant["plant_id"]),
-            "regular_name": plant["name"],
+            "regular_name": plant.get("name"),
             "scientific_name": plant.get("scientific_name"),
             "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT),
             "town_name": plant["origin_location"][2],
@@ -61,4 +50,4 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
 
 
 if __name__ == "__main__":
-    print(transform_data(get_data()))
+    print(transform_data(get_all_plant_data()))

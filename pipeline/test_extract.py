@@ -8,7 +8,7 @@ import extract
 class TestExtractRelevantData:
     '''Contains test for if function extracts relevant data'''
 
-    def test_extract_returns_necessary_information(self):
+    def test_extract_returns_necessary_information(self) -> None:
         '''Tests if information such as image is removed correctly'''
 
         sample_base_data = {
@@ -27,7 +27,7 @@ class TestExtractRelevantData:
         extracted_data = extract.extract_relevant_data(sample_base_data)
         assert 'image' not in extracted_data
 
-    def test_extract_returns_input_if_missing_key(self):
+    def test_extract_returns_input_if_missing_key(self) -> None:
         '''Tests if function returns original input if there are missing keys'''
 
         sample_missing_data = {
@@ -38,17 +38,16 @@ class TestExtractRelevantData:
             'fake_key': 'fake value'
         }
         extracted_data = extract.extract_relevant_data(sample_missing_data)
-        assert 'fake_key' in extracted_data
+        assert 'botanist' in extracted_data
 
-    def test_extract_returns_input_if_missing_key_error_data(self):
+    def test_extract_returns_input_if_missing_key_error_data(self) -> None:
         '''Tests if error message is preserved when passed into function'''
         sample_error_data = {
             'error': 'plant sensor fault',
             'plant_id': 8
         }
         extracted_data = extract.extract_relevant_data(sample_error_data)
-        assert 'error' in extracted_data
-        assert extracted_data['error'] == 'plant sensor fault'
+        assert extracted_data == {'plant_id': 8}
 
 
 class TestGetResponseFromAPI:

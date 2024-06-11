@@ -3,7 +3,6 @@
 import json
 import requests
 
-
 PLANT_DATA_HOST_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
 PLANT_DATA_RANGE = 52
 MAX_TIMEOUT_IN_SECONDS = 10
@@ -28,14 +27,13 @@ def extract_relevant_data(plant_data: dict) -> dict:
             relevant_data[key] = plant_data[key]
         else:
             print("Missing key: ", key)
-            return plant_data
 
     return relevant_data
 
 
 def get_response_from_api(plant_id: int,
                           host_url: str = PLANT_DATA_HOST_URL,
-                          max_timeout: int = MAX_TIMEOUT_IN_SECONDS) -> requests:
+                          max_timeout: int = MAX_TIMEOUT_IN_SECONDS) -> dict:
     '''Gets content from URL with specified plant id'''
     try:
         response = requests.get(host_url + str(plant_id), timeout=max_timeout)
