@@ -1,2 +1,4 @@
 pytest
 pylint
+requests
+json
