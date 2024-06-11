@@ -10,3 +10,5 @@
 *.md
 !README.md
 *.json
+pipeline/.pytest_cache
+pipeline/__pycache__
