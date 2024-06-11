@@ -1,9 +1,12 @@
-'''This file is responsible for extracting plant data from the Heroku API. Returns a list of dictionaries'''
+'''This file is responsible for extracting plant data from the Heroku API.'''
 
-import requests
 import json
+import requests
+
 
 PLANT_DATA_HOST_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
+PLANT_DATA_RANGE = 51
+MAX_TIMEOUT_IN_SECONDS = 10
 MANDATORY_KEYS = [
     'botanist',
     'last_watered',
@@ -11,36 +14,56 @@ MANDATORY_KEYS = [
     'recording_taken',
     'soil_moisture',
     'temperature',
-    'origin_location',
-    'name',
-    'scientific name'
+    'response'
 ]
 
 
-def extract_plant_data(plant_data: dict) -> dict:
+def extract_relevant_data(plant_data: dict) -> dict:
     '''Grabs and returns only the relevant information from the plant contents'''
-    pass
+    relevant_data = {}
+    for key in MANDATORY_KEYS:
+        if key in plant_data:
+            relevant_data[key] = plant_data[key]
+        else:
+            print("Missing key: ", key)
+            return plant_data
+
+    return relevant_data
 
 
-def get_response_from_API(plant_id: int, host_url: str = PLANT_DATA_HOST_URL) -> None:
+def get_response_from_api(plant_id: int,
+                          host_url: str = PLANT_DATA_HOST_URL,
+                          max_timeout: int = MAX_TIMEOUT_IN_SECONDS) -> requests:
     '''Gets content from URL with specified plant id'''
-    response = requests.get(host_url + str(plant_id))
-    print("Response:", response)
+    try:
+        response = requests.get(host_url + str(plant_id), timeout=max_timeout)
+    except TimeoutError:
+        return {'error': 'request timed out',
+                'plant_id': plant_id,
+                'response': 400}
 
     json_contents = json.loads(response.content)
-    print("json_stuff")
-    print(json_contents)
+    json_contents["response"] = response.status_code
     return json_contents
 
 
-def is_keys_in_json(dict_to_be_checked: dict, keys: list) -> bool:
-    '''Checks if the keys exist in the dictionary'''
-    for key in keys:
-        if key not in dict_to_be_checked:
-            return False
-    return True
+def get_all_plant_data() -> list[dict]:
+    '''Gets all plant data hosted from an API'''
+    list_of_plants = []
+
+    for plant_id in range(PLANT_DATA_RANGE):
+        plant_data = get_response_from_api(plant_id)
+        print(f"Plant id {plant_id} retrieved!")
+        list_of_plants.append(extract_relevant_data(plant_data))
+
+    return list_of_plants
 
 
 if __name__ == "__main__":
-    dict_to_check = get_response_from_API(8)
-    print("City: ", dict_to_check['origin_location'][2])
+    dict_to_check = get_response_from_api(7)
+    plants = get_all_plant_data()
+
+    for plant in plants:
+        print("----------------------------")
+        print(plant)
+        print("----------------------------")
