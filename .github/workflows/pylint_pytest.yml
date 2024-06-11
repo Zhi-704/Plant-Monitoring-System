@@ -50,5 +50,6 @@ jobs:
           pip install pylint
         
       - name: Run the linter on all python files
-        run: pylint --fail-under=8 *.py
+        run: |
+          pylint $(git ls-files '*.py')
   
