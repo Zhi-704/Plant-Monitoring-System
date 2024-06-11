@@ -1,3 +1,5 @@
 pytest
 pylint
 requests
+python-dotenv
+pytest-cov
