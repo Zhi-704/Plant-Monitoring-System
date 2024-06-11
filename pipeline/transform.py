@@ -1,11 +1,11 @@
 """Transform file"""
-import json
+from json import load
 
 
 def get_data() -> None:
     """Returns data from the herokuapp"""
-    with open("plant.json") as f:
-        return json.load(f)
+    with open("plant.json", encoding="utf-8") as f:
+        return load(f)
 
 
 def get_country(country_code: str) -> str:
@@ -18,7 +18,7 @@ def main() -> None:
     for i in data:
         if i.get("origin_location"):
             country_code = i["origin_location"][3]
-            get_country(country_code)
+            country = get_country(country_code)
 
 
 if __name__ == "__main__":
