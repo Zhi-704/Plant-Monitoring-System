@@ -18,7 +18,7 @@ def get_country(country_code: str) -> str:
 def transform_data(plant_data: list[dict]) -> list[dict]:
     """Selects useful data and transform to correct data type"""
     data = []
-    for plant in plant_data[:1]:
+    for plant in plant_data:
         if plant["response"] != 200:
             continue
 
