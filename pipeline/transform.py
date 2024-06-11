@@ -1,8 +1,9 @@
 """Transform file"""
 
-import pycountry
 from datetime import datetime
 from json import load
+import pycountry
+
 
 DATE_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 DATA_FILE = "plant.json"
@@ -60,5 +61,4 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
 
 
 if __name__ == "__main__":
-    plant_data = get_data()
-    print(transform_data(plant_data))
+    print(transform_data(get_data()))

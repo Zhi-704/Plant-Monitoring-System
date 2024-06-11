@@ -10,16 +10,6 @@ plant_data = [
             "name": "Carl Linnaeus",
             "phone": "(146)994-1635x35992"
         },
-        "images": {
-            "license": 45,
-            "license_name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
-            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
-            "medium_url": "https://perenual.com/storage/species_image/2773_epipremnum_aureum/medium/2560px-Epipremnum_aureum_31082012.jpg",
-            "original_url": "https://perenual.com/storage/species_image/2773_epipremnum_aureum/og/2560px-Epipremnum_aureum_31082012.jpg",
-            "regular_url": "https://perenual.com/storage/species_image/2773_epipremnum_aureum/regular/2560px-Epipremnum_aureum_31082012.jpg",
-            "small_url": "https://perenual.com/storage/species_image/2773_epipremnum_aureum/small/2560px-Epipremnum_aureum_31082012.jpg",
-            "thumbnail": "https://perenual.com/storage/species_image/2773_epipremnum_aureum/thumbnail/2560px-Epipremnum_aureum_31082012.jpg"
-        },
         "last_watered": "Mon, 10 Jun 2024 14:03:04 GMT",
         "name": "Epipremnum Aureum",
         "origin_location": [
