@@ -5,7 +5,7 @@ import requests
 
 
 PLANT_DATA_HOST_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
-PLANT_DATA_RANGE = 51
+PLANT_DATA_RANGE = 52
 MAX_TIMEOUT_IN_SECONDS = 10
 MANDATORY_KEYS = [
     'botanist',
@@ -14,6 +14,8 @@ MANDATORY_KEYS = [
     'recording_taken',
     'soil_moisture',
     'temperature',
+    'scientific_name',
+    'origin_location',
     'response'
 ]
 
