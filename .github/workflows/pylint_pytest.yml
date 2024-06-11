@@ -49,9 +49,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pylint
         
-      - name: Run the linter on pipeline files
-        run: pylint --fail-under=8 ./pipeline
-        
-      - name: Run the linter on dashboard files
-        run: pylint --fail-under=8 ./dashboard
+      - name: Run the linter on all python files
+        run: pylint --fail-under=8 *.py
   
