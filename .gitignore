@@ -9,3 +9,4 @@
 !requirements.txt
 *.md
 !README.md
+*.json
