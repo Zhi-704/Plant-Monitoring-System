@@ -35,6 +35,7 @@ class TestTransformData:
     def test_tranform_data_valid(self) -> None:
         """Transform the useful data"""
         assert transform_data(self.sample_data) == [{
+            'email': 'carl.linnaeus@lnhm.co.uk',
             'soil_moisture': 93.0958352536302,
             'temperature': 13.137477117877957,
             'timestamp': datetime.datetime(2024, 6, 10, 16, 1, 56),

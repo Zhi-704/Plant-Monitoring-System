@@ -13,19 +13,18 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
     """Selects useful data and transform to correct data type"""
     data = []
     for plant in plant_data:
-        if plant["response"] != 200:
-            continue
+        if plant["response"] == 200:
+            reading_data = {
+                "email": plant["botanist"]["email"],
+                "soil_moisture": float(plant["soil_moisture"]),
+                "temperature": float(plant["temperature"]),
+                "timestamp": datetime.fromisoformat(plant["recording_taken"]),
+                "plant_id": int(plant["plant_id"]),
+                "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT)
+            }
 
-        reading_data = {
-            "soil_moisture": float(plant["soil_moisture"]),
-            "temperature": float(plant["temperature"]),
-            "timestamp": datetime.fromisoformat(plant["recording_taken"]),
-            "plant_id": int(plant["plant_id"]),
-            "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT)
-        }
-
-        logging.info(reading_data)
-        data.append(reading_data)
+            logging.info(reading_data)
+            data.append(reading_data)
 
     return data
 
