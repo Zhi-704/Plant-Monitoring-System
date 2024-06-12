@@ -39,7 +39,7 @@ class TestExtractRelevantData:
             'fake_key': 'fake value'
         }
         extracted_data = extract.extract_relevant_data(sample_missing_data)
-        assert 'botanist' in extracted_data
+        assert 'last_watered' in extracted_data
 
     def test_extract_returns_input_if_missing_key_error_data(self) -> None:
         '''Tests if error message is preserved when passed into function'''
