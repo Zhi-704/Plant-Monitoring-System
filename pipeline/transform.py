@@ -41,7 +41,8 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
             "timestamp": datetime.fromisoformat(plant["recording_taken"]),
             "plant_id": int(plant["plant_id"]),
             "regular_name": plant["name"],
-            "scientific_name": plant["scientific_name"][0] if plant.get("scientific_name") else None,
+            "scientific_name": plant["scientific_name"][0]
+            if plant.get("scientific_name") else None,
             "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT),
             "latitude": plant["origin_location"][0],
             "longitude": plant["origin_location"][1],
@@ -59,6 +60,6 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
 
 if __name__ == "__main__":
     plants = transform_data(get_all_plant_data())
-    for plant in plants:
-        print((plant["plant_id"], plant["regular_name"],
-              plant["scientific_name"], plant["latitude"], plant["longitude"]))
+    for row in plants:
+        print((row["plant_id"], row["regular_name"],
+              row["scientific_name"], row["latitude"], row["longitude"]))
