@@ -17,3 +17,11 @@ This repository contains the all the code, documentation and resources required 
     pip3 install -r requirements.txt
     ```
 
+
+## Archictecture Diagram
+
+To view the archictecture diagram for the project, please refer to this diagram [here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/Architecture_Diagram.png).
+
+## Database Schema
+
+To view the database schema for the plant data, please refer to this Entity-Relationship Diagram (ERD) [here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png).
