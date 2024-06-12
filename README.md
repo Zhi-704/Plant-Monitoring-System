@@ -26,9 +26,9 @@ To view the archictecture diagram for the project, please refer to this diagram 
 
 To view the database schema for the plant data, please refer to this Entity-Relationship Diagram (ERD) [here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png).
 
-**Secrets/Authentication**
+## Secrets/Authentication**
 > [!IMPORTANT]  
-> To be able to run these scripts the following details must be provided in the `.env` file.
+> To be able to run these scripts the following details must be provided in the `.env` file and should NOT be shared.
 
 | KEY |Files Required|
 | -------- | --------|
