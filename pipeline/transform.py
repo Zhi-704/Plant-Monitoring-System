@@ -12,7 +12,7 @@ DATE_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 DATA_FILE = "plant.json"
 
 
-def get_country(country_code: str) -> str:
+def get_country(country_code: str) -> str | None:
     """From the country code, get the country name"""
     country = pycountry.countries.get(alpha_2=country_code)
     return country.name if country else None
@@ -40,8 +40,8 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
             "temperature": float(plant["temperature"]),
             "timestamp": datetime.fromisoformat(plant["recording_taken"]),
             "plant_id": int(plant["plant_id"]),
-            "regular_name": plant.get("name"),
-            "scientific_name": plant.get("scientific_name"),
+            "regular_name": plant["name"],
+            "scientific_name": plant["scientific_name"][0] if plant.get("scientific_name") else None,
             "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT),
             "latitude": plant["origin_location"][0],
             "longitude": plant["origin_location"][1],
@@ -59,5 +59,6 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
 
 if __name__ == "__main__":
     plants = transform_data(get_all_plant_data())
-    for row in plants:
-        print(row)
+    for plant in plants:
+        print((plant["plant_id"], plant["regular_name"],
+              plant["scientific_name"], plant["latitude"], plant["longitude"]))

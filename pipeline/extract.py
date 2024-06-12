@@ -15,6 +15,7 @@ MANDATORY_KEYS = [
     "botanist",
     "last_watered",
     "plant_id",
+    "name",
     "recording_taken",
     "soil_moisture",
     "temperature",
