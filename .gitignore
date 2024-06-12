@@ -16,4 +16,6 @@
 .pytest_cache
 __pycache__
 .coverage
-log/
+*.DS_Store
+
+log
