@@ -15,7 +15,9 @@ DATA_FILE = "plant.json"
 def get_country(country_code: str) -> str:
     """From the country code, get the country name"""
     country = pycountry.countries.get(alpha_2=country_code)
-    return country.name
+    if country:
+        return country.name
+    return None
 
 
 def transform_data(plant_data: list[dict]) -> list[dict]:
