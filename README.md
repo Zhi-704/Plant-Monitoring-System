@@ -25,3 +25,27 @@ To view the archictecture diagram for the project, please refer to this diagram 
 ## Database Schema
 
 To view the database schema for the plant data, please refer to this Entity-Relationship Diagram (ERD) [here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png).
+
+**Secrets/Authentication**
+> [!IMPORTANT]  
+> To be able to run these scripts the following details must be provided in the `.env` file.
+
+| KEY |Files Required|
+| -------- | --------|
+|DB_HOST|`load.py`,`main.py`|
+|DB_USER|`load.py`,`main.py`|
+|DB_SCHEMA|`load.py`,`main.py`|
+|DB_PASSWORD|`load.py`,`main.py`|
+|DB_PORT|`load.py`,`main.py`|
+|DB_NAME|`load.py`,`main.py`|
+
+## Folders
+- `pipeline`: code for the ETL pipeline from the API to the database
+- `archiver`: code that moves old data from database to an s3 bucket
+- `diagrams`: relevant images to the project
+- `.github`: github files required for the repository
+
+> [!NOTE]  
+> The project monitors only changes in the `reading` table([see here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)). All other data must be manually inserted during creation of the database.
+
+
