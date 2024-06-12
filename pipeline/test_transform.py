@@ -60,10 +60,12 @@ def test_tranform_data_valid(plant_data: list[dict]) -> None:
         'regular_name': 'Epipremnum Aureum',
         'scientific_name': ['Epipremnum aureum'],
         'last_watered': datetime.datetime(2024, 6, 10, 14, 3, 4),
+        'latitude': '-19.32556',
+        'longitude': '-41.25528',
         'town_name': 'Resplendor',
-        'TZ_identifier': 'America/Sao_Paulo',
         'country_code': 'BR',
-        'country_name': 'Brazil'}]
+        'country_name': 'Brazil',
+        'TZ_identifier': 'America/Sao_Paulo'}]
 
 
 def test_tranform_data_invalid(plant_data: list[dict]) -> None:

@@ -40,10 +40,12 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
             "regular_name": plant.get("name"),
             "scientific_name": plant.get("scientific_name"),
             "last_watered": datetime.strptime(plant["last_watered"], DATE_FORMAT),
+            "latitude": plant["origin_location"][0],
+            "longitude": plant["origin_location"][1],
             "town_name": plant["origin_location"][2],
-            "TZ_identifier": plant["origin_location"][4],
             "country_code": country_code,
-            "country_name": country_name
+            "country_name": country_name,
+            "TZ_identifier": plant["origin_location"][4]
         })
 
     return data
