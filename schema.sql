@@ -61,10 +61,10 @@ CREATE TABLE delta.reading(
     reading_id BIGINT IDENTITY(1,1) PRIMARY KEY,
     soil_moisture FLOAT NOT NULL,
     temperature FLOAT NOT NULL,
-    timestamp DATETIME2 NOT NULL,
+    timestamp DATETIME2(0) NOT NULL,
     plant_id SMALLINT NOT NULL,
     botanist_id SMALLINT NOT NULL,
-    last_watered DATETIME2 NOT NULL,
+    last_watered DATETIME2(0) NOT NULL,
     FOREIGN KEY (plant_id) REFERENCES delta.plant(plant_id),
     FOREIGN KEY (botanist_id) REFERENCES delta.botanist(botanist_id)
 );
