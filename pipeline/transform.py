@@ -1,8 +1,11 @@
-"""Transform file"""
+"""This file receives the plant data from the extract file and transforms it for the load file"""
+
+import logging
+from datetime import datetime
+
+import pycountry
 
 from extract import get_all_plant_data
-from datetime import datetime
-import pycountry
 
 
 DATE_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
@@ -28,7 +31,7 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
         country_code = plant["origin_location"][3]
         country_name = get_country(country_code)
 
-        data.append({
+        transformed_data = {
             "first_name": first_name,
             "last_name": last_name,
             "email": plant["botanist"]["email"],
@@ -46,10 +49,15 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
             "country_code": country_code,
             "country_name": country_name,
             "TZ_identifier": plant["origin_location"][4]
-        })
+        }
+
+        logging.info(transformed_data)
+        data.append(transformed_data)
 
     return data
 
 
 if __name__ == "__main__":
-    print(transform_data(get_all_plant_data()))
+    plants = transform_data(get_all_plant_data())
+    for row in plants:
+        print(row)

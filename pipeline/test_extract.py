@@ -1,6 +1,7 @@
 '''File used for testing the extract file for the pipeline'''
 
 from unittest.mock import patch, MagicMock
+import requests
 
 import extract
 
@@ -55,7 +56,7 @@ class TestGetResponseFromAPI:
 
     @patch("requests.get")
     @patch("json.loads")
-    def test_success_response_from_api(self, mock_load, mock_request_get):
+    def test_success_response_from_api(self, mock_load, mock_request_get) -> None:
         '''Assert that relevent functions are only called the required amount of times'''
 
         sample_data = {
@@ -81,10 +82,10 @@ class TestGetResponseFromAPI:
         assert mock_request_get.call_count == 1
 
     @patch("requests.get")
-    def test_timeout_response_from_api(self, mock_request_get):
+    def test_timeout_response_from_api(self, mock_request_get) -> None:
         '''Tests the function if timeout error occurs'''
 
-        mock_request_get.side_effect = TimeoutError
+        mock_request_get.side_effect = requests.exceptions.Timeout()
 
         contents = extract.get_response_from_api(2)
 
@@ -97,7 +98,7 @@ class TestGetAllPlantData:
     '''Contains get plant data function'''
 
     @patch("extract.get_response_from_api")
-    def test_number_of_retrieval_matches(self, mock_get_response):
+    def test_number_of_retrieval_matches(self, mock_get_response) -> None:
         '''Tests if the function calls other member functions the expected amount of times'''
 
         extract.get_all_plant_data()
