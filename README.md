@@ -45,7 +45,7 @@ To view the database schema for the plant data, please refer to this Entity-Rela
 - `diagrams`: relevant images to the project
 - `.github`: github files required for the repository
 
-> [!NOTE]  
-> The project monitors only changes in the `reading` table([see here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)). All other data must be manually inserted during creation of the database.
+> [!IMPORTANT]  
+> The project monitors only changes in the `reading` table ([see here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)). All other data must be manually inserted during creation of the database.
 
 
