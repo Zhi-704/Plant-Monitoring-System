@@ -20,7 +20,7 @@ This repository contains the all the code, documentation and resources required 
 
 ## Archictecture Diagram
 
-To view the archictecture diagram for the project, please refer to this diagram.
+The project architecture is based of the diagram below.
 
 ![Architecture Diagram](https://github.com/Zhi-704/C11-Kappa-Group-Project/raw/main/diagrams/Architecture_Diagram.png)
 
@@ -29,6 +29,8 @@ To view the archictecture diagram for the project, please refer to this diagram.
 
 To view the database schema for the plant data, please refer to this Entity-Relationship Diagram (ERD). 
 
+
+<a id="erd-diagram"></a>
 ![ERD Diagram](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)
 
 
@@ -52,6 +54,6 @@ To view the database schema for the plant data, please refer to this Entity-Rela
 - `.github`: github files required for the repository
 
 > [!IMPORTANT]  
-> The project monitors only changes in the `reading` table ([see here](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)). All other data must be manually inserted during creation of the database.
+> The project monitors only changes in the `reading` table ([see here](#erd-diagram)). All other data must be manually inserted during creation of the database.
 
 
