@@ -3,6 +3,8 @@
 from os import environ as ENV
 from dotenv import load_dotenv
 from pymssql import connect, Connection, exceptions  # pylint: disable=no-name-in-module
+import asyncio
+
 from extract import get_all_plant_data
 from transform import transform_data
 
@@ -49,7 +51,7 @@ def retrieve_botanist_ids_and_remove_botanist_emails(
             if result:
                 reading["botanist_id"] = result["botanist_id"]
             else:
-                raise ValueError(f"Botanist with email {
+                raise ValueError(f"Botanist with email {\
                                  email} not found in database.")
 
             reading.pop("email")
@@ -73,11 +75,12 @@ def insert_readings(reading_tuples: list[tuple], connection: Connection) -> None
 
 
 if __name__ == "__main__":
-
     load_dotenv()
 
     try:
-        reading_data = transform_data(get_all_plant_data())
+        reading_data = transform_data(
+            asyncio.run(get_all_plant_data())
+        )
 
         conn = get_connection()
 
