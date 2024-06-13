@@ -28,7 +28,7 @@ async def fetch_data_from_api(session, plant_id: int,
     """Gets content from URL with specified plant id"""
     try:
         async with session.get(host_url + str(plant_id), timeout=max_timeout) as response:
-            logging.info("Plant id %s data retrieved.", plant_id)
+            logging.info("Plant id %s data called.", plant_id)
             return await response.json()
 
     except asyncio.TimeoutError:
