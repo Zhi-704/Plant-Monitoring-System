@@ -26,12 +26,12 @@ jobs:
       - name: Install FreeTDS for pymssql
         run: |
           sudo apt-get update
-          sudo apt-get install -y freetds-dev
+          sudo apt-get install -y freetds
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install --no-binary :all: pymssql 
+          pip install --no-binary :all: pymssql --no-cache
           pip install pytest
           pip install -r requirements.txt
 
@@ -53,12 +53,12 @@ jobs:
       - name: Install FreeTDS for pymssql
         run: |
           sudo apt-get update
-          sudo apt-get install -y freetds-dev
+          sudo apt-get install -y freetds
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install --no-binary :all: pymssql
+          pip install --no-binary :all: pymssql --no-cache
           pip install pylint
           pip install -r requirements.txt
         
