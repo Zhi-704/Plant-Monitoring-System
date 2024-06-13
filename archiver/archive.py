@@ -73,9 +73,13 @@ def delete_all_reading_data_from_rds(conn: Connection) -> None:
     query = '''
 DELETE FROM delta.reading
 '''
-    with conn.cursor() as cur:
-        cur.execute(query)
-        conn.commit()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            conn.commit()
+    except exceptions.ProgrammingError as e:
+        print("An error has occurred: ", e)
+        conn.rollback()
 
 
 def load_into_csv(data: list[dict], filename: str) -> None:
@@ -84,6 +88,10 @@ def load_into_csv(data: list[dict], filename: str) -> None:
     if not data:
         print(f"The data list is empty. No CSV file was created for {
               filename}.")
+        return
+    if not isinstance(data, list):
+        return
+    if not isinstance(data[0], dict):
         return
 
     headers = data[0].keys()
