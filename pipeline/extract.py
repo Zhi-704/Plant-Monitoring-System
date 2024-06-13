@@ -11,15 +11,6 @@ LOG_FOLDER = "log"
 PLANT_DATA_HOST_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
 PLANT_DATA_RANGE = 51
 MAX_TIMEOUT_IN_SECONDS = 100
-MANDATORY_KEYS = [
-    "botanist",
-    "soil_moisture",
-    "temperature",
-    "recording_taken",
-    "plant_id",
-    "last_watered",
-    "response"
-]
 
 
 async def fetch_data_from_api(session, plant_id: int,
