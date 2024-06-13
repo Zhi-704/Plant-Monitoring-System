@@ -20,4 +20,5 @@ __pycache__
 
 log
 terraform
-.terraform
+*.terraform
+*.csv
