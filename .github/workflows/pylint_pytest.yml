@@ -26,7 +26,7 @@ jobs:
       - name: Install FreeTDS for pymssql
         run: |
           sudo apt-get update
-          sudo apt-get install -y freetds
+          sudo apt-get install -y freetds-dev freetds-bin
 
       - name: Install dependencies
         run: |
@@ -53,7 +53,7 @@ jobs:
       - name: Install FreeTDS for pymssql
         run: |
           sudo apt-get update
-          sudo apt-get install -y freetds
+          sudo apt-get install -y freetds-dev freetds-bin
 
       - name: Install dependencies
         run: |
