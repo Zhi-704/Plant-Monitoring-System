@@ -1,7 +1,8 @@
 .env
 .venv
 
-.terraform
+terraform
+*.terraform
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
@@ -19,6 +20,4 @@ __pycache__
 *.DS_Store
 
 log
-terraform
-*.terraform
 *.csv
