@@ -1,21 +1,26 @@
 '''This file is used to move old data from the database into a long-term storage system'''
 
+import os
+from os import environ as ENV
 from datetime import datetime
 import csv
-from os import environ as ENV
 from dotenv import load_dotenv
 from pymssql import connect, Connection, exceptions
 from boto3 import client
 import pytz
 
-TABLES_IN_DATABASE = ['reading',
-                      'town',
-                      'country',
-                      'timezone',
-                      'location',
-                      'botanist',
-                      'plant'
-                      ]
+TABLES_IN_DATABASE = [
+    'town',
+    'country',
+    'timezone',
+    'location',
+    'botanist',
+    'plant',
+    'reading'
+]
+METADATA_FOLDER = "metadata/"
+READING_FOLDER = "readings/"
+BUCKET_NAME = "c11-kappa-group-s3-bucket"
 
 
 def get_connection() -> Connection:
@@ -60,6 +65,7 @@ SELECT * FROM delta.{table_name}
     except exceptions.ProgrammingError as e:
         print("An error has occurred: ", e)
         conn.rollback()
+        return None
 
 
 def delete_all_reading_data_from_rds(conn: Connection) -> None:
@@ -72,7 +78,7 @@ DELETE FROM delta.reading
         conn.commit()
 
 
-def load_into_csv(data: list[dict], filename: str) -> None:
+def load_into_csv(data: list[dict], filename: str) -> str:
     if not data:
         print(f"The data list is empty. No CSV file was created for {
               filename}.")
@@ -89,51 +95,53 @@ def load_into_csv(data: list[dict], filename: str) -> None:
             csvwriter.writerow(row)
 
     print(f"File {filename} successfully created!")
-    return
 
 
 def get_uk_time() -> str:
     uk_timezone = pytz.timezone('Europe/London')
-    return datetime.now(uk_timezone).strftime("%H_%M_%S-%d_%m_%Y")
+    return datetime.now(uk_timezone).strftime("%d_%m_%Y")
 
 
-def upload_file_to_bucket(s3_clt: client, filename: str, bucket_name: str, object_name: str) -> None:
+def upload_file_to_bucket(s3_client: client, filename: str, bucket_name: str, object_name: str) -> None:
     '''Write a file to bucket.'''
     try:
-        s3_clt.upload_file(filename, bucket_name, object_name)
+        s3_client.upload_file(filename, bucket_name, object_name)
         print(f"File {filename} uploaded to {bucket_name}/{object_name}")
     except Exception as e:
         print(f"Error uploading file: {e}")
 
 
-def get_metadata(conn: Connection) -> list[dict]:
+def upload_metadata(s3_client: client, conn: Connection, curr_time: str) -> list[dict]:
+    '''Uploads all metadata folder to s3 bucket'''
 
-    pass
+    for table in TABLES_IN_DATABASE:
+        filename = f"{curr_time}/{table}_data.csv"
+        table_data = get_data_from_rds(conn, table)
+        if table_data:
+            load_into_csv(table_data, filename)
+        else:
+            print("No table data for ", table)
+            continue
+
+        if table != 'reading':
+            upload_file_to_bucket(s3_client, filename, BUCKET_NAME,
+                                  METADATA_FOLDER+filename)
+        else:
+            upload_file_to_bucket(s3_client, filename, BUCKET_NAME,
+                                  READING_FOLDER+filename)
+
+
+def create_today_folder(folder_name: str) -> None:
+
+    os.makedirs(folder_name, exist_ok=True)
 
 
 if __name__ == "__main__":
     load_dotenv()
-    current_time = get_uk_time()
+    current_date = get_uk_time()
     conn = get_connection()
-
-    reading_data = get_data_from_rds(conn, 'reading')
-    town_data = get_data_from_rds(conn, 'town')
-    # timezone_data = get_data_from_rds(conn, 'timezone')
-    # country_data = get_data_from_rds(conn, 'country')
-    # location_data = get_data_from_rds(conn, 'location')
-    # botanist_data = get_data_from_rds(conn, 'botanist')
-    # plant_data = get_data_from_rds(conn, 'plant')
-
-    load_into_csv(reading_data, f'reading_at_{current_time}.csv')
-    load_into_csv(town_data, f'town_at_{current_time}.csv')
-    # load_into_csv(timezone_data, f'timezone_at_{current_time}.csv')
-    # load_into_csv(country_data, f'country_at_{current_time}.csv')
-    # load_into_csv(location_data, f'location_at_{current_time}.csv')
-    # load_into_csv(botanist_data, f'botanist_at_{current_time}.csv')
-    # load_into_csv(plant_data, f'plant_at_{current_time}.csv')
+    s3_clt = load_s3_client()
+    create_today_folder(current_date)
+    upload_metadata(s3_clt, conn, current_date)
 
     # delete_all_reading_data_from_rds(conn)
-
-    s3_client = load_s3_client()
-    upload_file_to_bucket(s3_client, f'reading_at_{
-                          current_time}.csv', 'c11-kappa-group-s3-bucket', 'reading_data.csv')
