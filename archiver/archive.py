@@ -131,7 +131,7 @@ def upload_data_to_s3(s3_client: client, conn: Connection, curr_time: str) -> li
     for table in TABLES_IN_DATABASE:
         filename = f"{curr_time}/{table}_data.csv"
         table_data = get_data_from_rds(conn, table)
-        if table_data:
+        if isinstance(table_data, list) and len(table_data) >= 1:
             load_into_csv(table_data, filename)
         else:
             print("No table data for ", table)
