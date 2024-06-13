@@ -23,9 +23,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install FreeTDS for pymssql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y freetds-dev
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install --no-binary :all: pymssql 
           pip install pytest
           pip install -r requirements.txt
 
@@ -43,10 +49,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          
+      - name: Install FreeTDS for pymssql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y freetds-dev
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install --no-binary :all: pymsql
           pip install pylint
           pip install -r requirements.txt
         
