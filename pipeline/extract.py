@@ -1,10 +1,10 @@
 """This file is responsible for extracting plant data from the Heroku API."""
 
-import logging
 from time import time, perf_counter
 from os import path, mkdir
-
+import logging
 import asyncio
+
 import aiohttp
 
 LOG_FOLDER = "log"
