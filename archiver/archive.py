@@ -78,7 +78,9 @@ DELETE FROM delta.reading
         conn.commit()
 
 
-def load_into_csv(data: list[dict], filename: str) -> str:
+def load_into_csv(data: list[dict], filename: str) -> None:
+    '''Creates a csv file inside a folder named after today's date'''
+
     if not data:
         print(f"The data list is empty. No CSV file was created for {
               filename}.")
@@ -98,12 +100,16 @@ def load_into_csv(data: list[dict], filename: str) -> str:
 
 
 def get_uk_time() -> str:
+    '''Gets uk timezone as a string'''
     uk_timezone = pytz.timezone('Europe/London')
     return datetime.now(uk_timezone).strftime("%d_%m_%Y")
 
 
-def upload_file_to_bucket(s3_client: client, filename: str, bucket_name: str, object_name: str) -> None:
-    '''Write a file to bucket.'''
+def upload_file_to_bucket(s3_client: client,
+                          filename: str,
+                          bucket_name: str,
+                          object_name: str) -> None:
+    '''Uploads a file to the bucket.'''
     try:
         s3_client.upload_file(filename, bucket_name, object_name)
         print(f"File {filename} uploaded to {bucket_name}/{object_name}")
@@ -111,7 +117,7 @@ def upload_file_to_bucket(s3_client: client, filename: str, bucket_name: str, ob
         print(f"Error uploading file: {e}")
 
 
-def upload_metadata(s3_client: client, conn: Connection, curr_time: str) -> list[dict]:
+def upload_data_to_s3(s3_client: client, conn: Connection, curr_time: str) -> list[dict]:
     '''Uploads all metadata folder to s3 bucket'''
 
     for table in TABLES_IN_DATABASE:
@@ -132,16 +138,16 @@ def upload_metadata(s3_client: client, conn: Connection, curr_time: str) -> list
 
 
 def create_today_folder(folder_name: str) -> None:
-
+    '''Creates a directory for today's data'''
     os.makedirs(folder_name, exist_ok=True)
 
 
 if __name__ == "__main__":
     load_dotenv()
     current_date = get_uk_time()
-    conn = get_connection()
+    db_conn = get_connection()
     s3_clt = load_s3_client()
     create_today_folder(current_date)
-    upload_metadata(s3_clt, conn, current_date)
+    upload_data_to_s3(s3_clt, db_conn, current_date)
 
     # delete_all_reading_data_from_rds(conn)
