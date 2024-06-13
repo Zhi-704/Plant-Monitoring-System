@@ -23,9 +23,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install FreeTDS for pymssql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y freetds-dev freetds-bin libkrb5-dev
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install --no-binary :all: pymssql --no-cache
           pip install pytest
           pip install -r requirements.txt
 
@@ -43,14 +49,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          
+      - name: Install FreeTDS for pymssql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y freetds-dev freetds-bin libkrb5-dev
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install --no-binary :all: pymssql --no-cache
           pip install pylint
           pip install -r requirements.txt
         
       - name: Run the linter on all python files
         run: |
           pylint --fail-under=8.0 $(git ls-files '*.py')
-  
