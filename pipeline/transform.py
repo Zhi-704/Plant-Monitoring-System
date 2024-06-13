@@ -1,7 +1,8 @@
 """This file receives the plant data from the extract file and transforms it for the load file"""
 
-import logging
 from datetime import datetime
+import logging
+import asyncio
 
 from extract import get_all_plant_data
 
@@ -13,7 +14,9 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
     """Selects useful data and transform to correct data type"""
     data = []
     for plant in plant_data:
-        if plant["response"] == 200:
+        if plant.get("error"):
+            logging.error(plant)
+        else:
             reading_data = {
                 "email": plant["botanist"]["email"],
                 "soil_moisture": float(plant["soil_moisture"]),
@@ -30,6 +33,8 @@ def transform_data(plant_data: list[dict]) -> list[dict]:
 
 
 if __name__ == "__main__":
-    plants = transform_data(get_all_plant_data())
+    plants = transform_data(
+        asyncio.run(get_all_plant_data())
+    )
     for row in plants:
         print(row)
