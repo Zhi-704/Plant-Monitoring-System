@@ -1,7 +1,7 @@
 pytest
 pylint
 pycountry
-requests
 python-dotenv
 pytest-cov
 boto3
+aiohttp

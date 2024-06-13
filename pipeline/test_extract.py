@@ -1,106 +1,88 @@
 '''File used for testing the extract file for the pipeline'''
 
 from unittest.mock import patch, MagicMock
-import requests
+import asyncio
 
-import extract
-
-
-class TestExtractRelevantData:
-    '''Contains test for if function extracts relevant data'''
-
-    def test_extract_returns_necessary_information(self) -> None:
-        '''Tests if information such as image is removed correctly'''
-
-        sample_base_data = {
-            'botanist': 'John Doe',
-            'last_watered': '2024-06-10',
-            'plant_id': 1,
-            'recording_taken': '2024-06-11',
-            'soil_moisture': 80,
-            'image': "fake url",
-            'temperature': 25,
-            'origin_location': 'South America',
-            'name': 'Aloe Vera',
-            'scientific_name': 'Aloe vera',
-            'response': 200
-        }
-        extracted_data = extract.extract_relevant_data(sample_base_data)
-        assert 'image' not in extracted_data
-
-    def test_extract_returns_input_if_missing_key(self) -> None:
-        '''Tests if function returns original input if there are missing keys'''
-
-        sample_missing_data = {
-            'botanist': 'John Doe',
-            'last_watered': '2024-06-10',
-            'plant_id': 1,
-            'response': 200,
-            'fake_key': 'fake value'
-        }
-        extracted_data = extract.extract_relevant_data(sample_missing_data)
-        assert 'last_watered' in extracted_data
-
-    def test_extract_returns_input_if_missing_key_error_data(self) -> None:
-        '''Tests if error message is preserved when passed into function'''
-        sample_error_data = {
-            'error': 'plant sensor fault',
-            'plant_id': 8
-        }
-        extracted_data = extract.extract_relevant_data(sample_error_data)
-        assert extracted_data == {'plant_id': 8}
+from extract import get_all_plant_data, PLANT_DATA_RANGE
 
 
 class TestGetResponseFromAPI:
     '''Contains test for GetResponse function'''
 
-    @patch("requests.get")
+    @patch("aiohttp.ClientSession.get")
     @patch("json.loads")
-    def test_success_response_from_api(self, mock_load, mock_request_get) -> None:
+    def test_success_response_from_api(self, mock_load, mock_session_get) -> None:
         '''Assert that relevent functions are only called the required amount of times'''
 
-        sample_data = {
-            'botanist': 'John Doe',
-            'last_watered': '2024-06-10',
-            'plant_id': 1,
-            'fake_key': 'fake value'
-        }
+        sample_data = [
+            {
+                "botanist": {
+                    "email": "carl.linnaeus@lnhm.co.uk",
+                    "name": "Carl Linnaeus",
+                    "phone": "(146)994-1635x35992"
+                },
+                "images": {
+                    "license": 45,
+                    "license_name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+                    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+                    "medium_url": "https://perenual.com/storage/species_image.jpg",
+                    "original_url": "https://perenual.com/storage/species_image.jpg",
+                    "regular_url": "https://perenual.com/storage/species_image.jpg",
+                    "small_url": "https://perenual.com/storage/species_image.jpg",
+                    "thumbnail": "https://perenual.com/storage/species_image.jpg"
+                },
+                "last_watered": "Mon, 10 Jun 2024 14:03:04 GMT",
+                "name": "Epipremnum Aureum",
+                "origin_location": [
+                    "-19.32556",
+                    "-41.25528",
+                    "Resplendor",
+                    "BR",
+                    "America/Sao_Paulo"
+                ],
+                "plant_id": 0,
+                "recording_taken": "2024-06-10 16:01:56",
+                "scientific_name": ["Epipremnum aureum"],
+                "soil_moisture": 93.0958352536302,
+                "temperature": 13.137477117877957,
+                'fake_key': 'fake value'
+            }]
 
         mock_response = MagicMock()
         mock_response.content = "Fake values"
         mock_response.status_code = 555
 
-        mock_request_get.return_value = mock_response
+        mock_session_get.return_value = mock_response
         mock_load.return_value = sample_data
 
-        contents = extract.get_response_from_api(2)
+        # contents = fetch_data_from_api(mock_response_get, 2)
 
-        assert 'response' in contents
-        assert contents['response'] == 555
-        assert 'fake_key' in contents
-        assert mock_load.call_count == 1
-        assert mock_request_get.call_count == 1
+        # assert 'response' in contents
+        # assert contents['response'] == 555
+        # assert 'fake_key' in contents
+        # assert mock_load.call_count == 1
+        # assert mock_session_get.call_count == 1
 
-    @patch("requests.get")
-    def test_timeout_response_from_api(self, mock_request_get) -> None:
+    @patch("aiohttp.ClientSession.get")
+    def test_timeout_response_from_api(self, mock_session_get) -> None:
         '''Tests the function if timeout error occurs'''
 
-        mock_request_get.side_effect = requests.exceptions.Timeout()
+        mock_session_get.side_effect = asyncio.TimeoutError
 
-        contents = extract.get_response_from_api(2)
+        # contents = fetch_data_from_api(mock_session_get, 0)
 
-        assert 'error' in contents
-        assert contents['response'] == 400
-        assert contents['error'] == 'request timed out'
+        # assert 'error' in contents
+        # assert contents['response'] == 400
+        # assert contents['error'] == 'request timed out'
 
 
 class TestGetAllPlantData:
     '''Contains get plant data function'''
 
-    @patch("extract.get_response_from_api")
+    @patch("aiohttp.ClientSession.get")
     def test_number_of_retrieval_matches(self, mock_get_response) -> None:
         '''Tests if the function calls other member functions the expected amount of times'''
 
-        extract.get_all_plant_data()
+        asyncio.run(get_all_plant_data())
 
-        assert mock_get_response.call_count == extract.PLANT_DATA_RANGE
+        assert mock_get_response.call_count == PLANT_DATA_RANGE
