@@ -8,7 +8,7 @@ This repository contains the all the code, documentation and resources required 
 
 1. Clone this repository:
     ```sh
-    git clone https://github.com/danfh00/vodnik-plant-health-monitor.
+    git clone https://github.com/Zhi-704/C11-Kappa-Group-Project.git.
     ```
 
 2. Navigate to the directory and install the required packages in the terminal:
