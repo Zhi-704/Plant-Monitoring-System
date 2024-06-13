@@ -4,4 +4,5 @@ pycountry
 python-dotenv
 pytest-cov
 boto3
+pytz
 aiohttp
