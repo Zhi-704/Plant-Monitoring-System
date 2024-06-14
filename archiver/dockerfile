@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.12 as build-image
 
 COPY requirements.txt .
 
@@ -11,9 +11,10 @@ ENV CPPFLAGS="-I/usr/include/openssl"
 
 RUN pip install --pre --no-binary :all: pymssql --no-cache
 RUN pip install -r requirements.txt
-
+RUN pip install awslambdaric
 
 COPY archive.py .
 
+ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
 
-CMD python3 archive.py
+CMD [ "archive.lambda_handler" ]
