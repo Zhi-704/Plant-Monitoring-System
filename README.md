@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the Liverpool Natural History Museum Plant System repository. This repository contains the all the code, documentation and resources required to monitor and analyse the health of plants in in the botanical wing of the museum. The system collects real-time data through an API from a variety of sensors placed next to each plant. This data is used for long-term storage and visualization, enabling museum staff to maintain and manage plant health effectively.
+Welcome to the Liverpool Natural History Museum Plant System repository. This repository contains the all the code, documentation and resources required to monitor and analyse the health of plants in the botanical wing of the museum. The system collects real-time data through an API from a variety of sensors placed next to each plant. This data is used for long-term storage and visualization, enabling museum staff to maintain and manage plant health effectively.
 
 ## Repository Structure
 
@@ -27,7 +27,7 @@ Welcome to the Liverpool Natural History Museum Plant System repository. This re
     ```
 
 > [!NOTE]  
-The `local_requirements.txt` file lists all necessary packages to run all folders locally. The other `requirements.txt` files are used for provisioning resources in AWS for Docker environments.
+The `local_requirements.txt` file lists all necessary packages to run all folders locally. The other `requirements.txt` files are used for provisioning resources in AWS for Docker environments and image registry.
 
 3. Run the schema.sql script found in the main repository to set up the database.
     ```sh
@@ -43,11 +43,11 @@ Ensure you create an `.env` file in each relevant folder and include the necessa
 
 | KEY | Affected Folders | Description |
 | -------- | --------| --------|
+|AWS_ACCESS_KEY|`terraform`| Authentication key for AWS used by Terraform to manage cloud resources.
+|AWS_SECRET_KEY|`terraform`| Secret key for AWS used by Terraform for secure authentication.
 |ACCESS_KEY|`archiver`,`dashboard`| Used to access the AWS system.
 |SECRET_ACCESS_KEY|`archiver`, `dashboard`| Used for authentication for the AWS system.
 |BUCKET_NAME|`archiver`, `dashboard`| Name of storage bucket (e.g., Amazon S3) where long-term data is stored.
-|AWS_ACCESS_KEY|`terraform`| Authentication key for AWS used by Terraform to manage cloud resources.
-|AWS_SECRET_KEY|`terraform`| Secret key for AWS used by Terraform for secure authentication.
 |DB_HOST|`archiver`, `dashboard`, `terraform`| Host address of the database server used by the applications and Terraform.
 |DB_USER|`archiver`, `dashboard`, `terraform`| Username for authenticating and accessing the database.
 |DB_SCHEMA|`archiver`, `dashboard`, `terraform`| Refers to the database schema or namespace within the database.
@@ -55,25 +55,44 @@ Ensure you create an `.env` file in each relevant folder and include the necessa
 |DB_PORT|`archiver`, `dashboard`, `terraform`| Port number on which the database server listens for connections.
 |DB_NAME|`archiver`, `dashboard`, `terraform`| Name of the database used by the applications and Terraform.
 
-## Dashboard
+## Pipeline (Local Set-Up)
 
-After setting up the pipelines, you can access the plant analytics dashboard by following these steps:
+To configure the ETL piepline for moving data from the API to the database, follow these steps:
+
+1. Navigate to the `dashboard` directory:
+    ```sh
+    cd [PATH_TO_FOLDER]/C11-Kappa-Group-Project/pipeline
+    ```
+
+2. Create an `.env` file and configured correctly inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
+
+3. Run the pipeline script:
+    ```sh
+    python3 pipeline.py
+    ```
+
+
+## Dashboard (Local Set-Up)
+
+After setting up the pipeline, you can access the plant analytics dashboard locally by following these steps:
 
 1. Navigate to the `dashboard` directory:
     ```sh
     cd [PATH_TO_FOLDER]/C11-Kappa-Group-Project/dashboard
     ```
 
-2. Run the dashboard application:
+2. Create an `.env` file and configured correctly inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
+
+3. Run the dashboard application:
     ```sh
     streamlit run streamlit.py
     ```
 
-3. Open a web browser and navigate to `http://localhost:5000`. The dashboard will display soil moisture and temperature data over time for all plants.
+4. Open a web browser and navigate to `http://localhost:5000`. The dashboard will display soil moisture and temperature data over time for all plants.
 
 ## Cloud Resources
 
-To provision all the necessary cloud resources for the pipelines and dashboard, follow these steps using Terraform:
+To provision all the necessary cloud resources for the pipeline and dashboard and deploy it online, follow these steps using Terraform:
 
 1. Navigate to the `terraform` directory:
     ```sh
@@ -94,11 +113,11 @@ To provision all the necessary cloud resources for the pipelines and dashboard, 
     ```
 
 > [!NOTE]  
-> Ensure that your AWS credentials are configured properly before running the Terraform commands. This setup will provision all required AWS resources for running the pipelines and dashboard.
+> Ensure that your AWS credentials are configured properly before running the Terraform commands. This setup will provision all required AWS resources for running the pipeline and dashboard.
 
 ## Archictecture Diagram
 
-The project architecture is based of the diagram below.
+The project architecture is based on the diagram below.
 
 ![Architecture Diagram](https://github.com/Zhi-704/C11-Kappa-Group-Project/raw/main/diagrams/Architecture_Diagram.png)
 
