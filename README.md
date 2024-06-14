@@ -128,11 +128,14 @@ The project architecture is based on the diagram below:
 To view the database schema for the plant data, please refer to this Entity-Relationship Diagram (ERD). 
 
 
-<a id="erd-diagram"></a>
 ![ERD Diagram](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/ERD_diagram.png)
 
 
 > [!IMPORTANT]  
 > This project monitors only changes in the `reading` table. All other data must be manually inserted during creation of the database or by informing the engineers.
 
+## Dashboard Wireframe
 
+Below is a wireframe of the plant analytics dashboard. This visual guide shows the layout and main components of the dashboard, which displays soil moisture and temperature data over time for all plants, as well as specific plants.
+
+![Dashboard Wireframe](https://github.com/Zhi-704/C11-Kappa-Group-Project/blob/main/diagrams/Dashboard_Wireframe.png)
