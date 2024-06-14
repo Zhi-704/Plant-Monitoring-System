@@ -27,7 +27,8 @@ Welcome to the Liverpool Natural History Museum Plant System repository. This re
     ```
 
 > [!NOTE]  
-The `local_requirements.txt` file lists all necessary packages to run all folders locally. The other `requirements.txt` files are used for provisioning resources in AWS for Docker environments and image registry.
+The `local_requirements.txt` file lists all necessary packages to run all folders locally. The other `requirements.txt` files are used for provisioning resources in AWS for Docker environments and image registry. If a folder encounters issues running the code, consider running `pip3 install -r requirements.txt` in the local folder to ensure all required packages are installed.
+
 
 3. Run the schema.sql script found in the main repository to set up the database.
     ```sh
@@ -132,6 +133,6 @@ To view the database schema for the plant data, please refer to this Entity-Rela
 
 
 > [!IMPORTANT]  
-> The project monitors only changes in the `reading` table ([see here](#erd-diagram)). All other data must be manually inserted during creation of the database or by informing the engineers.
+> The project monitors only changes in the `reading` table. All other data must be manually inserted during creation of the database or by informing the engineers.
 
 
