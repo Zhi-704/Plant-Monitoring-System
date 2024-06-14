@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the Liverpool Natural History Museum Plant System repository. This repository contains the all the code, documentation and resources required to monitor and analyse the health of plants in the botanical wing of the museum. The system collects real-time data through an API from a variety of sensors placed next to each plant. This data is used for long-term storage and visualization, enabling museum staff to maintain and manage plant health effectively.
+Welcome to the Liverpool Natural History Museum Plant System repository. This repository contains the all the code, documentation and resources required to monitor and analyze the health of plants in the botanical wing of the museum. The system collects real-time data through an API from a variety of sensors placed next to each plant. This data is used for long-term storage and visualization, enabling museum staff to maintain and manage plant health effectively.
 
 ## Repository Structure
 
