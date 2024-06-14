@@ -1,23 +1,32 @@
+# Environment and virtual environment files
 .env
 .venv
 
+# Terraform files
 *.terraform
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.backup
 *.tfvars
 
-*.txt
-!requirements.txt
-!local_requirements.txt
-*.md
-!README.md
-*.json
-
+# Python cache and coverage
 .pytest_cache
 __pycache__
 .coverage
+
+# MacOS specific files
 *.DS_Store
 
-log
+# General file types to ignore
+*.txt
 *.csv
+*.json
+*.md
+
+# Development log files
+log
+
+# Exceptions: files to include in the repository
+!requirements.txt
+!local_requirements.txt
+!README.md
