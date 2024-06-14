@@ -7,7 +7,7 @@ import asyncio
 
 import aiohttp
 
-LOG_FOLDER = "log"
+LOG_FOLDER = "/tmp/log"
 PLANT_DATA_HOST_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
 PLANT_DATA_RANGE = 51
 MAX_TIMEOUT_IN_SECONDS = 100
