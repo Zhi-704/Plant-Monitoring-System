@@ -5,6 +5,7 @@ from os import environ as ENV
 from datetime import datetime
 import csv
 from dotenv import load_dotenv
+import json
 from pymssql import connect, Connection, exceptions
 from boto3 import client
 import pytz
@@ -125,29 +126,50 @@ def upload_file_to_bucket(s3_client: client,
         print(f"Error uploading file: {e}")
 
 
-def upload_data_to_s3(s3_client: client, conn: Connection, curr_time: str) -> list[dict]:
+def upload_data_to_s3(s3_client: client, conn: Connection, folder_path: str, curr_time: str) -> list[dict]:
     '''Uploads all metadata folder to s3 bucket'''
 
     for table in TABLES_IN_DATABASE:
-        filename = f"{curr_time}/{table}_data.csv"
+        local_filename = f"{folder_path}/{table}_data.csv"
+        remote_filename = f"{curr_time}/{table}_data.csv"
         table_data = get_data_from_rds(conn, table)
         if isinstance(table_data, list) and len(table_data) >= 1:
-            load_into_csv(table_data, filename)
+            load_into_csv(table_data, local_filename)
         else:
             print("No table data for ", table)
             continue
 
         if table != 'reading':
-            upload_file_to_bucket(s3_client, filename, BUCKET_NAME,
-                                  METADATA_FOLDER+filename)
+            upload_file_to_bucket(s3_client, local_filename, BUCKET_NAME,
+                                  METADATA_FOLDER+remote_filename)
         else:
-            upload_file_to_bucket(s3_client, filename, BUCKET_NAME,
-                                  READING_FOLDER+filename)
+            upload_file_to_bucket(s3_client, local_filename, BUCKET_NAME,
+                                  READING_FOLDER+remote_filename)
 
 
-def create_today_folder(folder_name: str) -> None:
+def create_today_folder(folder_name: str) -> str:
     '''Creates a directory for today's data'''
+    folder_name = os.path.join('tmp', folder_name)
     os.makedirs(folder_name, exist_ok=True)
+    return folder_name
+
+
+def lambda_handler(event, context):
+    print("Lambda function has started")
+    load_dotenv()
+    current_date = get_uk_time()
+    db_conn = get_connection()
+    s3_clt = load_s3_client()
+    folder_path = create_today_folder(current_date)
+    upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
+    # delete_all_reading_data_from_rds(conn)
+
+    print("Lambda function has finished")
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Process completed successfully!')
+    }
 
 
 if __name__ == "__main__":
@@ -155,7 +177,7 @@ if __name__ == "__main__":
     current_date = get_uk_time()
     db_conn = get_connection()
     s3_clt = load_s3_client()
-    create_today_folder(current_date)
-    upload_data_to_s3(s3_clt, db_conn, current_date)
+    folder_path = create_today_folder(current_date)
+    upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
 
     # delete_all_reading_data_from_rds(conn)

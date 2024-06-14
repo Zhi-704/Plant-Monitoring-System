@@ -1,0 +1,19 @@
+FROM python:latest
+
+COPY requirements.txt .
+
+RUN apt-get update
+RUN apt-get install -y freetds-dev
+
+ENV CFLAGS="-I/usr/include/openssl"
+ENV LDFLAGS="-L/usr/lib -L/usr/local/openssl/lib"
+ENV CPPFLAGS="-I/usr/include/openssl"
+
+RUN pip install --pre --no-binary :all: pymssql --no-cache
+RUN pip install -r requirements.txt
+
+
+COPY archive.py .
+
+
+CMD python3 archive.py
