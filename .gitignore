@@ -9,6 +9,7 @@
 
 *.txt
 !requirements.txt
+!local_requirements.txt
 *.md
 !README.md
 *.json
