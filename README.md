@@ -38,7 +38,7 @@ The `local_requirements.txt` file lists all necessary packages to run all folder
 ## Secrets/Authentication
 
 > [!IMPORTANT]  
-> To run these scripts, the following details must be provided in an `.env` file within their respective folders. TThese credentials are sensitive and should NOT be shared.
+> To run these scripts, the following details must be provided in an `.env` file within their respective folders. These credentials are sensitive and should NOT be shared.
 
 Ensure you create an `.env` file in each relevant folder and include the necessary environment variables as outlined below:
 
@@ -65,7 +65,7 @@ To configure the ETL piepline for moving data from the API to the database, foll
     cd [PATH_TO_FOLDER]/C11-Kappa-Group-Project/pipeline
     ```
 
-2. Create an `.env` file and configured correctly inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
+2. Create an `.env` file and configure its content with the correct information inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
 
 3. Run the pipeline script:
     ```sh
@@ -82,7 +82,7 @@ After setting up the pipeline, you can access the plant analytics dashboard loca
     cd [PATH_TO_FOLDER]/C11-Kappa-Group-Project/dashboard
     ```
 
-2. Create an `.env` file and configured correctly inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
+2. Create an `.env` file and configure its content with the correct information inside the folder. [For authentication and secrets setup, refer to the Secrets/Authentication section](#secretsauthentication)
 
 3. Run the dashboard application:
     ```sh
@@ -93,7 +93,7 @@ After setting up the pipeline, you can access the plant analytics dashboard loca
 
 ## Cloud Resources
 
-To provision all the necessary cloud resources for the pipeline and dashboard and deploy it online, follow these steps using Terraform:
+To create all the necessary cloud resources and deploy the dashboard and pipeline online, follow these steps using Terraform:
 
 1. Navigate to the `terraform` directory:
     ```sh
@@ -114,11 +114,11 @@ To provision all the necessary cloud resources for the pipeline and dashboard an
     ```
 
 > [!NOTE]  
-> Ensure that your AWS credentials are configured properly before running the Terraform commands. This setup will provision all required AWS resources for running the pipeline and dashboard.
+> Ensure that your AWS credentials are configured properly before running the Terraform commands. This setup will create all required AWS resources for running the pipeline and dashboard.
 
 ## Archictecture Diagram
 
-The project architecture is based on the diagram below.
+The project architecture is based on the diagram below:
 
 ![Architecture Diagram](https://github.com/Zhi-704/C11-Kappa-Group-Project/raw/main/diagrams/Architecture_Diagram.png)
 
@@ -133,6 +133,6 @@ To view the database schema for the plant data, please refer to this Entity-Rela
 
 
 > [!IMPORTANT]  
-> The project monitors only changes in the `reading` table. All other data must be manually inserted during creation of the database or by informing the engineers.
+> This project monitors only changes in the `reading` table. All other data must be manually inserted during creation of the database or by informing the engineers.
 
 
