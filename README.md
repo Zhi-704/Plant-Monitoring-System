@@ -16,6 +16,8 @@ This repository contains the all the code, documentation and resources required 
     pip3 install -r local_requirements.txt
     ```
 
+> [!NOTE]  
+The `local_requirements.txt` file lists all necessary packages to run all folders locally. The other `requirements.txt` files are used for provisioning resources in AWS for Docker environments.
 
 ## Archictecture Diagram
 
@@ -41,15 +43,15 @@ To view the database schema for the plant data, please refer to this Entity-Rela
 | -------- | --------| --------|
 |ACCESS_KEY|`archiver`,`dashboard`| Used to access the AWS system.
 |SECRET_ACCESS_KEY|`archiver`, `dashboard`| Used for authentication for the AWS system.
-|BUCKET_NAME|`archiver`, `dashboard`| Name of storage bucket where long-term data is stored.
-|AWS_ACCESS_KEY|`terraform`| Used by Terraform to access AWS.
-|AWS_SECRET_KEY|`terraform`| Used by Terraform to authenticate AWS.
-|DB_HOST|`archiver`, `dashboard`, `terraform`| Host address of the database server where the RDS is.
-|DB_USER|`archiver`, `dashboard`, `terraform`| Authenticated username accessing the RDS.
-|DB_SCHEMA|`archiver`, `dashboard`, `terraform`| Refers to the database schema within the RDS.
+|BUCKET_NAME|`archiver`, `dashboard`| Name of storage bucket (e.g., Amazon S3) where long-term data is stored.
+|AWS_ACCESS_KEY|`terraform`| Authentication key for AWS used by Terraform to manage cloud resources.
+|AWS_SECRET_KEY|`terraform`| Secret key for AWS used by Terraform for secure authentication.
+|DB_HOST|`archiver`, `dashboard`, `terraform`| Host address of the database server used by the applications and Terraform.
+|DB_USER|`archiver`, `dashboard`, `terraform`| Username for authenticating and accessing the database.
+|DB_SCHEMA|`archiver`, `dashboard`, `terraform`| Refers to the database schema or namespace within the database.
 |DB_PASSWORD|`archiver`, `dashboard`, `terraform`| Used for authentication for the user accessing the RDS.
-|DB_PORT|`archiver`, `dashboard`, `terraform`| Port number where the database server is listening for connections.
-|DB_NAME|`archiver`, `dashboard`, `terraform`| Refers to the name of the RDS within the database server.
+|DB_PORT|`archiver`, `dashboard`, `terraform`| Port number on which the database server listens for connections.
+|DB_NAME|`archiver`, `dashboard`, `terraform`| Name of the database used by the applications and Terraform.
 
 ## Folders
 - `pipeline`: ETL pipeline that moves data from the API to the RDS
