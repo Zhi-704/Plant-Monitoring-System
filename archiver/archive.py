@@ -4,8 +4,8 @@ import os
 from os import environ as ENV
 from datetime import datetime
 import csv
-from dotenv import load_dotenv
 import json
+from dotenv import load_dotenv
 from pymssql import connect, Connection, exceptions
 from boto3 import client
 import pytz
@@ -155,6 +155,7 @@ def create_today_folder(folder_name: str) -> str:
 
 
 def lambda_handler(event, context):
+    '''Function that runs when ran as a lambda function'''
     print("Lambda function has started")
     load_dotenv()
     current_date = get_uk_time()
@@ -162,7 +163,7 @@ def lambda_handler(event, context):
     s3_clt = load_s3_client()
     folder_path = create_today_folder(current_date)
     upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
-    # delete_all_reading_data_from_rds(conn)
+    delete_all_reading_data_from_rds(db_conn)
 
     print("Lambda function has finished")
 
@@ -170,14 +171,3 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps('Process completed successfully!')
     }
-
-
-if __name__ == "__main__":
-    load_dotenv()
-    current_date = get_uk_time()
-    db_conn = get_connection()
-    s3_clt = load_s3_client()
-    folder_path = create_today_folder(current_date)
-    upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
-
-    # delete_all_reading_data_from_rds(conn)
