@@ -5,6 +5,7 @@ from os import environ as ENV
 from datetime import datetime
 import csv
 import json
+
 from dotenv import load_dotenv
 from pymssql import connect, Connection, exceptions
 from boto3 import client
@@ -21,7 +22,6 @@ TABLES_IN_DATABASE = [
 ]
 METADATA_FOLDER = "metadata/"
 READING_FOLDER = "readings/"
-BUCKET_NAME = "c11-kappa-group-s3-bucket"
 
 
 def get_connection() -> Connection:
@@ -82,6 +82,8 @@ DELETE FROM delta.reading
         print("An error has occurred: ", e)
         conn.rollback()
 
+    print("All reading data deleted!")
+
 
 def load_into_csv(data: list[dict], filename: str) -> None:
     '''Creates a csv file inside a folder named after today's date'''
@@ -131,7 +133,10 @@ def upload_data_to_s3(s3_client: client, conn: Connection, folder_path: str, cur
 
     for table in TABLES_IN_DATABASE:
         local_filename = f"{folder_path}/{table}_data.csv"
-        remote_filename = f"{curr_time}/{table}_data.csv"
+        if table == 'reading':
+            remote_filename = f"{curr_time}/{table}_data.csv"
+        else:
+            remote_filename = f"{table}_data.csv"
         table_data = get_data_from_rds(conn, table)
         if isinstance(table_data, list) and len(table_data) >= 1:
             load_into_csv(table_data, local_filename)
@@ -140,10 +145,13 @@ def upload_data_to_s3(s3_client: client, conn: Connection, folder_path: str, cur
             continue
 
         if table != 'reading':
-            upload_file_to_bucket(s3_client, local_filename, BUCKET_NAME,
+            print(local_filename)
+            print(remote_filename)
+            print(ENV["BUCKET_NAME"])
+            upload_file_to_bucket(s3_client, local_filename, ENV["BUCKET_NAME"],
                                   METADATA_FOLDER+remote_filename)
         else:
-            upload_file_to_bucket(s3_client, local_filename, BUCKET_NAME,
+            upload_file_to_bucket(s3_client, local_filename, ENV["BUCKET_NAME"],
                                   READING_FOLDER+remote_filename)
 
 
@@ -171,3 +179,16 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps('Process completed successfully!')
     }
+
+
+if __name__ == "__main__":
+    print("Lambda function has started")
+    load_dotenv()
+    current_date = get_uk_time()
+    db_conn = get_connection()
+    s3_clt = load_s3_client()
+    folder_path = create_today_folder(current_date)
+    upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
+    delete_all_reading_data_from_rds(db_conn)
+
+    print("Lambda function has finished")
