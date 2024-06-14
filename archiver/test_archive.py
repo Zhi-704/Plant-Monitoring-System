@@ -103,6 +103,7 @@ class TestUploadDataToS3:
         mock_bucket = 'my_bucket'
         mock_metadata = 'metadata/'
         mock_reading = 'reading/'
+        fake_folder_path = 'humpty-dumpty'
 
         mock_get_data_from_rds.side_effect = [
             [{'id': 1, 'value': 'test1'}],
@@ -114,21 +115,22 @@ class TestUploadDataToS3:
                 patch('archive.BUCKET_NAME', mock_bucket), \
                 patch('archive.METADATA_FOLDER', mock_metadata), \
                 patch('archive.READING_FOLDER', mock_reading):
-            upload_data_to_s3(mock_s3_client, mock_conn, curr_time)
+            upload_data_to_s3(mock_s3_client, mock_conn,
+                              fake_folder_path, curr_time)
 
         mock_get_data_from_rds.assert_any_call(mock_conn, 'table1')
         mock_get_data_from_rds.assert_any_call(mock_conn, 'table2')
         mock_get_data_from_rds.assert_any_call(mock_conn, 'reading')
 
         mock_load_into_csv.assert_any_call(
-            [{'id': 1, 'value': 'test1'}], '2024-06-13-15-30-00/table1_data.csv')
+            [{'id': 1, 'value': 'test1'}], f'{fake_folder_path}/table1_data.csv')
         mock_load_into_csv.assert_any_call(
-            [{'id': 2, 'value': 'test2'}], '2024-06-13-15-30-00/table2_data.csv')
+            [{'id': 2, 'value': 'test2'}], f'{fake_folder_path}/table2_data.csv')
 
         mock_upload_file_to_bucket.assert_any_call(
-            mock_s3_client, '2024-06-13-15-30-00/table1_data.csv', mock_bucket, 'metadata/2024-06-13-15-30-00/table1_data.csv')
+            mock_s3_client, f'{fake_folder_path}/table1_data.csv', mock_bucket, f'{mock_metadata}{curr_time}/table1_data.csv')
         mock_upload_file_to_bucket.assert_any_call(
-            mock_s3_client, '2024-06-13-15-30-00/table2_data.csv', mock_bucket, 'metadata/2024-06-13-15-30-00/table2_data.csv')
+            mock_s3_client, f'{fake_folder_path}/table2_data.csv', mock_bucket, f'{mock_metadata}{curr_time}/table2_data.csv')
 
         assert mock_get_data_from_rds.call_count == 3
         assert mock_load_into_csv.call_count == 2
