@@ -1,3 +1,2 @@
 python-dotenv
-pytest-cov
 aiohttp
