@@ -5,6 +5,7 @@ from os import environ as ENV
 from datetime import datetime
 import csv
 import json
+import logging
 
 from dotenv import load_dotenv
 from pymssql import connect, Connection, exceptions
@@ -64,7 +65,7 @@ SELECT * FROM delta.{table_name}
 
         return data
     except exceptions.ProgrammingError as e:
-        print("An error has occurred: ", e)
+        logging.error("An error has occurred: %s", e)
         conn.rollback()
         return None
 
@@ -79,18 +80,19 @@ DELETE FROM delta.reading
             cur.execute(query)
             conn.commit()
     except exceptions.ProgrammingError as e:
-        print("An error has occurred: ", e)
+        logging.error("An error has occurred: %s", e)
         conn.rollback()
 
-    print("All reading data deleted!")
+    logging.info("All reading data deleted!")
 
 
 def load_into_csv(data: list[dict], filename: str) -> None:
     '''Creates a csv file inside a folder named after today's date'''
 
     if not data:
-        print(f"The data list is empty. No CSV file was created for {
-              filename}.")
+        error_message = f"The data list is empty. No CSV file was created for {
+            filename}."
+        logging.error(error_message)
         return
     if not isinstance(data, list):
         return
@@ -107,7 +109,7 @@ def load_into_csv(data: list[dict], filename: str) -> None:
         for row in data:
             csvwriter.writerow(row)
 
-    print(f"File {filename} successfully created!")
+    logging.info("File %s successfully created!", filename)
 
 
 def get_uk_time() -> str:
@@ -123,12 +125,18 @@ def upload_file_to_bucket(s3_client: client,
     '''Uploads a file to the bucket.'''
     try:
         s3_client.upload_file(filename, bucket_name, object_name)
-        print(f"File {filename} uploaded to {bucket_name}/{object_name}")
+        log_message = f"File {filename} uploaded to {
+            bucket_name}/{object_name}"
+        logging.info(log_message)
     except Exception as e:
-        print(f"Error uploading file: {e}")
+        error_message = f"Error uploading file: {e}"
+        logging.error(error_message)
 
 
-def upload_data_to_s3(s3_client: client, conn: Connection, folder_path: str, curr_time: str) -> list[dict]:
+def upload_data_to_s3(s3_client: client,
+                      conn: Connection,
+                      folder_path: str,
+                      curr_time: str) -> list[dict]:
     '''Uploads all metadata folder to s3 bucket'''
 
     for table in TABLES_IN_DATABASE:
@@ -141,13 +149,10 @@ def upload_data_to_s3(s3_client: client, conn: Connection, folder_path: str, cur
         if isinstance(table_data, list) and len(table_data) >= 1:
             load_into_csv(table_data, local_filename)
         else:
-            print("No table data for ", table)
+            logging.info("No table data for %s", table)
             continue
 
         if table != 'reading':
-            print(local_filename)
-            print(remote_filename)
-            print(ENV["BUCKET_NAME"])
             upload_file_to_bucket(s3_client, local_filename, ENV["BUCKET_NAME"],
                                   METADATA_FOLDER+remote_filename)
         else:
@@ -164,7 +169,8 @@ def create_today_folder(folder_name: str) -> str:
 
 def lambda_handler(event, context):
     '''Function that runs when ran as a lambda function'''
-    print("Lambda function has started")
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Lambda function has started")
     load_dotenv()
     current_date = get_uk_time()
     db_conn = get_connection()
@@ -173,22 +179,9 @@ def lambda_handler(event, context):
     upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
     delete_all_reading_data_from_rds(db_conn)
 
-    print("Lambda function has finished")
+    logging.info("Lambda function has finished")
 
     return {
         'statusCode': 200,
         'body': json.dumps('Process completed successfully!')
     }
-
-
-if __name__ == "__main__":
-    print("Lambda function has started")
-    load_dotenv()
-    current_date = get_uk_time()
-    db_conn = get_connection()
-    s3_clt = load_s3_client()
-    folder_path = create_today_folder(current_date)
-    upload_data_to_s3(s3_clt, db_conn, folder_path, current_date)
-    delete_all_reading_data_from_rds(db_conn)
-
-    print("Lambda function has finished")
