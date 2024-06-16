@@ -7,8 +7,8 @@ import streamlit as st
 import utils
 import charts
 
-AWS_ACCESS_KEY = ENV.get("ACCESS_KEY")
-AWS_SECRET_ACCESS_KEY = ENV.get("SECRET_ACCESS_KEY")
+AWS_ACCESS_KEY = ENV["ACCESS_KEY"]
+AWS_SECRET_ACCESS_KEY = ENV["SECRET_ACCESS_KEY"]
 
 
 if __name__ == "__main__":

@@ -8,9 +8,9 @@ import botocore.exceptions
 
 load_dotenv()
 
-AWS_ACCESS_KEY = ENV.get("ACCESS_KEY")
-AWS_SECRET_ACCESS_KEY = ENV.get("SECRET_ACCESS_KEY")
-source_bucket = ENV.get("BUCKET_NAME")
+AWS_ACCESS_KEY = ENV["ACCESS_KEY"]
+AWS_SECRET_ACCESS_KEY = ENV["SECRET_ACCESS_KEY"]
+source_bucket = ENV["BUCKET_NAME"]
 destination_path = "./data"
 
 
